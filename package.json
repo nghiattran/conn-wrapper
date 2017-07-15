@@ -1,0 +1,31 @@
+{
+  "name": "conn-wrapper",
+  "version": "1.0.0",
+  "description": "A wrapper for connections which only allows passing string.",
+  "main": "index.js",
+  "scripts": {
+    "test": "nyc mocha",
+    "cover": "nyc --reporter=lcov npm test"
+  },
+  "engines": {
+    "node": ">=v4"
+  },
+  "files": [
+    "index.js"
+  ],
+  "repository": "nghiattran/conn-wrapper",
+  "author": {
+    "name": "nghiattran",
+    "email": "nghiattran3@gmail.com",
+    "url": ""
+  },
+  "license": "MIT",
+  "homepage": "",
+  "dependencies": {},
+  "devDependencies": {
+    "coveralls": "2.11.2",
+    "mocha": "2.2.5",
+    "mocha-lcov-reporter": "0.0.2",
+    "nyc": "^11.0.3"
+  }
+}
