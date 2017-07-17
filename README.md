@@ -41,23 +41,19 @@ child.on('message', function(message) {
 
 
 ```js
-const connWrapper = require('conn-wrapper');
+const ConnWrapper = require('conn-wrapper');
 const cp = require('child_process');
 
 const child = cp.fork(path.join('./child.js'));
-const listener = connWrapper(child);
+const wrapper = ConnWrapper(child);
 
-listener.on('event1', function(body) {
-  // Do something
-})
+// Send event
+wrapper.send('event', payload)
 
-listener.on('event3', function(body) {
+// Listen for an event
+wrapper.on('event1', function(payload) {
   // Do something
-})
-
-listener.on('event2', function(body) {
-  // Do something
-})
+});
 ```
 
 To achieve this, the `message` sent by `conn.send()` must be a json or json format string. All other type will be ignored. 

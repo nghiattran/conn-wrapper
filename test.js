@@ -4,26 +4,27 @@ const assert = require('assert');
 const cp = require('child_process');
 const path = require('path');
 const crypto = require('crypto');
-const connWrapper = require('./');
+const ConnWrapper = require('./');
 
-function test(listener, child, done, data, opts) {
+function test(listener, done, data, opts) {
   if (!data) {
     data = {
-      event: crypto.randomBytes(10).toString('hex'),
-      body: crypto.randomBytes(10).toString('hex')
+      event: crypto.randomBytes(3).toString('hex'),
+      body: crypto.randomBytes(3).toString('hex')
     }
   }
 
-  let sendData = data;
-  if (opts && opts.string) {
-    sendData = JSON.stringify(sendData);
-  }
-
-  child.send(sendData);
   listener.once(data.event, function(body) {
     assert(body === data.body);
     done(); 
   });
+
+  let payload = data;
+  if (opts && opts.string) {
+    payload = JSON.stringify(payload);
+  }
+
+  listener.send(data.event, data.body);
 }
 
 describe('test', function() {
@@ -34,20 +35,20 @@ describe('test', function() {
   };
 
   const child = cp.fork(path.join(`${__dirname}`, 'child.js'), [], args);
-  const listener = connWrapper(child);
+  const listener = new ConnWrapper(child);
 
   it('Pass json string', function(done) {
-    test(listener, child, done);
+    test(listener, done);
   });
 
   it('Pass non-json string: expect error', function(done) {
-    test(listener, child, done, 'hello world');
     listener.once('error', function () {
       done();
     })
+    child.send('hello world')
   });
 
   it('Pass object', function(done) {
-    test(listener, child, done);
+    test(listener, done);
   });
 });
